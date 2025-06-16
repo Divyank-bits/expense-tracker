@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { errorHandler } from './middleware/errorHandler';
 import { notFoundHandler } from './middleware/notFoundHandler';
+import { db, testConnection } from './db/connection';
 
 // Import routes
 // import authRoutes from './routes/auth.routes';
@@ -46,8 +47,16 @@ app.use(notFoundHandler);
 app.use(errorHandler);
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
+  
+  // Test database connection
+  const dbConnected = await testConnection();
+  if (dbConnected) {
+    console.log('Database connected successfully');
+  } else {
+    console.error('Failed to connect to database');
+  }
 });
 
 export default app;
